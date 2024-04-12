@@ -1,11 +1,12 @@
 import './App.css';
-import ProjectList from './components/projectList';
-
+import { Routes, Route } from 'react-router-dom';
+import ProjectPage from './pages/projectPage';
 function App() {
 	return (
-		<div>
-			<ProjectList></ProjectList>
-		</div>
+		<Routes>
+			<Route path='/' element={<ProjectPage />} />
+			<Route path='*' element={<div>404 Not Found</div>}></Route>
+		</Routes>
 	);
 }
 
