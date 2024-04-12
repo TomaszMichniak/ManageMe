@@ -10,20 +10,12 @@ export class ProjectService {
 		api.add(project);
 	}
 	static deleteProject(id: number) {
-		let projects = this.getAllProjects();
-		projects = projects.filter((project) => project.id !== id);
-		api.remove(projects);
+		api.remove(id);
 	}
 	static updateProject(updateProject: Project) {
-		let projects = this.getAllProjects();
-		projects = projects.map((project) =>
-			project.id === updateProject.id ? updateProject : project
-		);
-		api.update(projects);
+		api.update(updateProject);
 	}
-	static getProjectById(id: number) {
-		let projects = this.getAllProjects();
-		let project = projects.find((project) => project.id == id);
-		return project;
+	static getProjectById(id: number): Project | undefined {
+		return api.getById(id);
 	}
 }
