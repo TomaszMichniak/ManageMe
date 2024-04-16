@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Project } from '../types/projectType';
+import { Link } from 'react-router-dom';
 import { ProjectService } from '../service/projectService';
 import ProjectForm from './form/projectForm';
 
@@ -69,6 +70,12 @@ export default function ProjectList() {
 									<p>{project.description}</p>
 								</td>
 								<td className='px-2 py-4 font-medium text-gray-900  dark:text-white'>
+									<Link
+										to={`/project/${project.id}`}
+										className='w-full my-1 bg-green-400 block text-white font-bold py-2 px-2 rounded'
+									>
+										Story
+									</Link>
 									<button
 										className='w-full my-1 bg-green-400 block text-white font-bold py-2 px-2 rounded'
 										onClick={() => handleEdit(project.id)}
