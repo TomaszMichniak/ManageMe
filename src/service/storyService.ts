@@ -5,8 +5,8 @@ export class StoryService {
 	static getAllStories(): Story[] {
 		return api.getAll();
 	}
-	static addStory(project: Story) {
-		api.add(project);
+	static addStory(story: Story) {
+		api.add(story);
 	}
 	static deleteStory(id: number) {
 		api.remove(id);

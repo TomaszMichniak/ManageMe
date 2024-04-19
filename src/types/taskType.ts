@@ -1,14 +1,14 @@
-import { Project } from './projectType';
 import { Priority } from './enums/priorityEnum';
 import { Status } from './enums/statusEnum';
-
-export type Story = {
+import { User } from './userType';
+export type Task = {
 	id: number;
-	name: string;
 	description: string;
 	priority: Priority;
-	project: Project;
-	createDate: string;
+	storyId: number;
 	status: Status;
-	userId: number;
+	addDate: string;
+	startDate?: string;
+	endDate?: string;
+	userId?: number;
 };

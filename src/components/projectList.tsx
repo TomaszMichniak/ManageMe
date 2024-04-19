@@ -39,7 +39,7 @@ export default function ProjectList() {
 		setCreateMode(!createMode);
 	};
 	return (
-		<div className='mx-5 overflow-x-auto'>
+		<div className='mx-2 overflow-x-auto  '>
 			<div className='text-right m-2'>
 				<button
 					className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
@@ -48,19 +48,19 @@ export default function ProjectList() {
 					Add
 				</button>
 			</div>
-			<div className=''>
-				<table className='text-wrap w-full text-sm text-center text-gray-600 dark:text-gray-400'>
+			<div className='bg-white shadow-sm shadow-red-900 rounded-lg'>
+				<table className=' text-wrap w-full text-sm text-center text-gray-600 dark:text-gray-400'>
 					<thead className='text-s text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400'>
 						<tr>
 							<th className='py-3 max-w-10'>Name</th>
 							<th className=''>Description</th>
-							<th className=''>Action</th>
+							<th className='w-1/5'>Action</th>
 						</tr>
 					</thead>
 					<tbody>
 						{projects?.map((project) => (
 							<tr
-								className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'
+								className=' border-t dark:bg-gray-800 dark:border-gray-700'
 								key={project.id}
 							>
 								<td className='px-2 py-4 font-medium text-gray-900 dark:text-white'>
@@ -69,21 +69,21 @@ export default function ProjectList() {
 								<td className='px-2 py-4 font-medium text-gray-900  dark:text-white'>
 									<p>{project.description}</p>
 								</td>
-								<td className='px-2 py-4 font-medium text-gray-900  dark:text-white'>
+								<td className=' px-2 py-4 font-medium lg:flex text-gray-900  dark:text-white'>
 									<Link
 										to={`/project/${project.id}`}
-										className='w-full my-1 bg-green-400 block text-white font-bold py-2 px-2 rounded'
+										className='w-full m-1 bg-green-400 block text-white font-bold py-2 px-2 rounded'
 									>
 										Story
 									</Link>
 									<button
-										className='w-full my-1 bg-green-400 block text-white font-bold py-2 px-2 rounded'
+										className='w-full m-1 bg-green-400 block text-white font-bold py-2 px-2 rounded'
 										onClick={() => handleEdit(project.id)}
 									>
 										E
 									</button>
 									<button
-										className='w-full my-1  bg-red-400 block text-white font-bold py-2 px-2 rounded'
+										className='w-full m-1  bg-red-400 block text-white font-bold py-2 px-2 rounded'
 										onClick={() => handleDelete(project.id)}
 									>
 										X

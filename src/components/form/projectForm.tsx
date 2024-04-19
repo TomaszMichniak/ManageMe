@@ -35,7 +35,7 @@ export default function ProjectForm({
 	};
 
 	return (
-		<div className='background-form w-screen h-screen absolute top-0 left-0'>
+		<div className='background-form w-screen h-screen fixed top-0 left-0'>
 			<div className=' flex h-screen w-11/12 items-center mx-auto '>
 				<div className='bg-white rounded mx-auto '>
 					<div className='flex justify-center mx-auto items-center text-xl py-2 px-3'>

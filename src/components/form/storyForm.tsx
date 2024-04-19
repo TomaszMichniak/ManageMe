@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import { FormEvent } from 'react';
 import moment from 'moment';
 import { Status } from '../../types/enums/statusEnum';
-import { Priority } from '../../types/enums/priorityStatus';
+import { Priority } from '../../types/enums/priorityEnum';
 import { ProjectService } from '../../service/projectService';
+import { UserService } from '../../service/userService';
 interface Props {
 	handleCloseCreateMenu: () => void;
 	handleCreate: (newStory: Story) => void;
@@ -34,7 +35,7 @@ export default function StoryForm({
 			});
 		}
 	}, [story]);
-
+	const user = UserService.loginUser();
 	const project = ProjectService.getProjectById(projectId);
 	const handleCreateStory = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -45,7 +46,7 @@ export default function StoryForm({
 			status: formData.status,
 			priority: formData.priority,
 			createDate: story ? story.createDate : moment().format('DD-MM-YYYY'),
-			owner: 1,
+			userId: user.id,
 			project: project!,
 		};
 		if (newStory.name == '' || newStory.description == '') return;
@@ -70,7 +71,7 @@ export default function StoryForm({
 	};
 
 	return (
-		<div className='background-form w-screen h-screen absolute top-0 left-0'>
+		<div className='background-form w-screen h-screen fixed top-0 left-0'>
 			<div className=' flex h-screen w-11/12 items-center mx-auto '>
 				<div className='bg-white rounded mx-auto '>
 					<div className='flex justify-center mx-auto items-center text-xl py-2 px-3'>

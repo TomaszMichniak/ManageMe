@@ -1,14 +1,17 @@
 import { StoryService } from '../service/storyService';
 import { Story } from '../types/storyType';
+import { useLocation } from 'react-router-dom';
 import StoryForm from './form/storyForm';
 import { Status } from '../types/enums/statusEnum';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 export default function StoryList() {
 	let { projectId } = useParams<{ projectId: string }>();
 	if (projectId === undefined) {
 		throw new Error('undefined Parms');
 	}
+	const location = useLocation();
 	const projectIdNumber = Math.abs(parseInt(projectId));
 	const [selectedStatus, setSelectedStatus] = useState<Status | null>(null);
 	const [createMode, setCreateMode] = useState<boolean>(false);
@@ -89,9 +92,15 @@ export default function StoryList() {
 							<p>Priorytet: {story.priority}</p>
 							<p>Utworzono: {story.createDate}</p>
 							<p>Status: {story.status}</p>
-							<p>Właściciel: {story.owner}</p>
+							<p>Właściciel: {story.userId}</p>
 						</div>
 						<div className=''>
+							<Link
+								className='w-full my-1 bg-green-400 block text-white font-bold py-2 px-2 rounded'
+								to={`${location.pathname}/story/${story.id}`}
+							>
+								Tasks
+							</Link>
 							<button
 								className='w-full my-1 bg-green-400 block text-white font-bold py-2 px-2 rounded'
 								onClick={() => handleEdit(story.id)}
