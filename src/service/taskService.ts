@@ -1,4 +1,5 @@
 import { ApiService } from '../service/apiService';
+import { Status } from '../types/enums/statusEnum';
 import { Task } from '../types/taskType';
 const api = new ApiService('tasks');
 export class TaskService {
@@ -19,5 +20,13 @@ export class TaskService {
 	}
 	static getAllStoryTasks(id: number) {
 		return this.getAllTasks().filter((item: Task) => item.storyId == id);
+	}
+	static setToDoing(task:Task){
+		task.status=Status.doing
+		this.updateTask(task);
+	}
+	static setToDone(task:Task){
+		task.status=Status.done;
+		this.updateTask(task);
 	}
 }

@@ -11,8 +11,8 @@ export default function StoryList() {
 	if (projectId === undefined) {
 		throw new Error('undefined Parms');
 	}
-	const location = useLocation();
 	const projectIdNumber = Math.abs(parseInt(projectId));
+	const location = useLocation();
 	const [selectedStatus, setSelectedStatus] = useState<Status | null>(null);
 	const [createMode, setCreateMode] = useState<boolean>(false);
 	const [stories, setStories] = useState<Story[] | null>(null);

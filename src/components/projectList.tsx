@@ -15,7 +15,7 @@ export default function ProjectList() {
 		})();
 	}, []);
 	const handleEdit = async (projectId: number) => {
-		let project = await ProjectService.getProjectById(projectId); // Pamiętaj o używaniu await przy pobieraniu projektu
+		let project = await ProjectService.getProjectById(projectId);
 		setEditingProject(project!);
 	};
 	const handleCreateNewProject = async (newProject: Project) => {

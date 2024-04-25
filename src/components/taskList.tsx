@@ -4,17 +4,17 @@ import { TaskService } from '../service/taskService';
 import { Status } from '../types/enums/statusEnum';
 import TaskForm from './form/taskForm';
 import { useParams } from 'react-router-dom';
-import SetUserTaskForm from './form/setUserTaskForm';
+import TaskDetails from './taskDetails';
 
 export default function TaskList() {
 	const [tasks, setTasks] = useState<Task[] | null>(null);
 	const [createMode, setCreateMode] = useState<boolean>(false);
-	const [userMode, setUserMode] = useState<boolean>(false);
+	const [task,setTask]=useState<Task|null>(null)
 	useEffect(() => {
 		(async () => {
 			getSetTasks();
 		})();
-	}, []);
+	}, [task]);
 	let { storyId } = useParams<{ storyId: string }>();
 	if (storyId === undefined) {
 		throw new Error('undefined Parms');
@@ -29,68 +29,24 @@ export default function TaskList() {
 			<div>
 				{tasks?.map((task) =>
 					task.status === Status.todo ? (
-						<div key={task.id} className='border-t '>
-							<p>{task.description}</p>
-							<p>{task.priority}</p>
-							<p>{task.addDate}</p>
-							<button
-								className='bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded'
-								//onClick={() => handleCreate()}
-							>
-								edit
-							</button>
-							<button
-								className='m-1 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded'
-								onClick={() => handleSetUser()}
-							>
-								set user
-							</button>
-							<button
-								className='m-1 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded'
-								onClick={() => handleDelete(task.id)}
-							>
-								X
-							</button>
-						</div>
+						<button onClick={()=>handleDetails(task)} key={task.id} className= 'm-1 rounded-lg text-white font-bold border-t w-5/6 p-3 bg-gradient-to-r from-cyan-400 to-blue-500 '>
+							{task.description}
+							
+						</button>
 					) : null
 				)}
 			</div>
 		);
 	};
-	const handleDelete = async (taskId: number) => {
-		TaskService.deleteTask(taskId);
-		getSetTasks();
-	};
+	
 	const DoingTasks: React.FC = () => {
 		return (
 			<div>
 				{tasks?.map((task) =>
 					task.status === Status.doing ? (
-						<div key={task.id} className='border-t border-l'>
+						<button onClick={()=>handleDetails(task)} key={task.id} className='m-1 rounded-lg border-t font-bold w-5/6 p-3 text-white bg-gradient-to-r from-amber-300 to-orange-500'>
 							<p>{task.description}</p>
-							<p>{task.priority}</p>
-							<p>{task.addDate}</p>
-							<p>start: {task.startDate}</p>
-							<p>{/* user: {task.user?.firstName} {task.user?.lastName} */}</p>
-							<button
-								className='bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded'
-								//onClick={() => handleCreate()}
-							>
-								edit
-							</button>
-							<button
-								className='m-1 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded'
-								//onClick={() => handleCreate()}
-							>
-								Done
-							</button>
-							<button
-								className='m-1 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded'
-								onClick={() => handleDelete(task.id)}
-							>
-								X
-							</button>
-						</div>
+						</button>
 					) : null
 				)}
 			</div>
@@ -101,14 +57,9 @@ export default function TaskList() {
 			<div className=''>
 				{tasks?.map((task) =>
 					task.status === Status.done ? (
-						<div key={task.id} className='border-t border-l'>
+						<button onClick={()=>handleDetails(task)} key={task.id} className='m-1 rounded-lg border-t w-5/6 p-3 font-bold bg-gradient-to-r from-lime-400 to-green-600 text-white'>
 							<p>{task.description}</p>
-							<p>{task.priority}</p>
-							<p>{task.addDate}</p>
-							<p>start: {task.startDate}</p>
-							<p>end: {task.endDate}</p>
-							<p>{/* user: {task.user?.firstName} {task.user?.lastName} */}</p>
-						</div>
+						</button>
 					) : null
 				)}
 			</div>
@@ -122,22 +73,28 @@ export default function TaskList() {
 	const handleCreate = () => {
 		setCreateMode(!createMode);
 	};
-	const handleSetUser = () => {
-		setUserMode(!userMode);
-	};
+	const handleDetails=(task:Task)=>{
+		setTask(task);
+	}
+	const handleDelete=(taskId:number)=>{
+		TaskService.deleteTask(taskId);
+		setTask(null);
+		getSetTasks();
+	}
+	
 	return (
 		<div className='mx-2 '>
-			<div className='text-right '>
+			<div className='text-right  '>
 				<button
-					className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+					className='bg-gradient-to-r from-cyan-400 to-blue-600 text-white font-bold py-2 px-4 rounded'
 					onClick={() => handleCreate()}
 				>
 					Add
 				</button>
 			</div>
 			<div className='text-center bg-white rounded-xl '>
-				<div className=' flex mt-2 rounded'>
-					<div className='w-1/3 py-5 '>ToDo</div>
+				<div className=' flex mt-2 rounded font-bold text-xl bg-gray-100'>
+					<div className='w-1/3 py-5 '>To do</div>
 					<div className='w-1/3 py-5 border-l'>Doing</div>
 					<div className='w-1/3 py-5 border-l '>Done</div>
 				</div>
@@ -160,7 +117,11 @@ export default function TaskList() {
 					storyId={storyIdNumber}
 				/>
 			)}
-			{userMode && <SetUserTaskForm />}
+			{task&&<TaskDetails
+			closeMenu={()=>setTask(null)}
+			handleDelete={handleDelete}
+			task={task}/>}
+			
 		</div>
 	);
 }
