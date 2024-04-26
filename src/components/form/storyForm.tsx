@@ -5,7 +5,9 @@ import moment from 'moment';
 import { Status } from '../../types/enums/statusEnum';
 import { Priority } from '../../types/enums/priorityEnum';
 import { ProjectService } from '../../service/projectService';
-import { UserService } from '../../service/userService';
+import { TokenService } from '../../service/tokenService';
+import { jwtDecode } from 'jwt-decode';
+import { redirect } from 'react-router-dom';
 interface Props {
 	handleCloseCreateMenu: () => void;
 	handleCreate: (newStory: Story) => void;
@@ -18,6 +20,18 @@ export default function StoryForm({
 	projectId,
 	story,
 }: Props) {
+	let data;
+	let userId: number;
+	const token = TokenService.getToken();
+	if (!token) {
+		redirect('http://localhost:5173/');
+	} else {
+		data = jwtDecode(token);
+	}
+
+	if (data?.userid != undefined) {
+		userId = data?.userid;
+	}
 	const [formData, setFormData] = useState({
 		name: '',
 		description: '',
@@ -35,10 +49,11 @@ export default function StoryForm({
 			});
 		}
 	}, [story]);
-	const user = UserService.loginUser();
 	const project = ProjectService.getProjectById(projectId);
 	const handleCreateStory = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		if (userId == null) {
+		}
 		let newStory: Story = {
 			id: story ? story.id : Math.floor(Date.now() / 100),
 			name: formData.name,
@@ -46,7 +61,7 @@ export default function StoryForm({
 			status: formData.status,
 			priority: formData.priority,
 			createDate: story ? story.createDate : moment().format('DD-MM-YYYY'),
-			userId: user.id,
+			userId: userId,
 			project: project!,
 		};
 		if (newStory.name == '' || newStory.description == '') return;

@@ -48,7 +48,7 @@ export default function ProjectList() {
 					Add
 				</button>
 			</div>
-			<div className='bg-white shadow-sm shadow-red-900 rounded-lg'>
+			<div className='bg-white  rounded-lg'>
 				<table className=' text-wrap w-full text-sm text-center text-gray-600 dark:text-gray-400'>
 					<thead className='text-s text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400'>
 						<tr>

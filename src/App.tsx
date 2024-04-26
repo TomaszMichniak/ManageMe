@@ -3,35 +3,41 @@ import { Routes, Route } from 'react-router-dom';
 import StoryPage from './pages/storyPage';
 import ProjectPage from './pages/projectPage';
 import TaskPage from './pages/taskPage';
-// import { UserService } from './service/userService';
-// import { User } from './types/userType';
-// import { Role } from './types/enums/roleEnum';
+import { UserService } from './service/userService';
+import { User } from './types/userType';
+import { Role } from './types/enums/roleEnum';
 import LoginRegisterPage from './pages/loginPage';
 import RegisterPage from './pages/registerPage';
 function App() {
-	// if (UserService.getAllUsers().length <= 0) {
-	// 	const newUser: User = {
-	// 		id: 1,
-	// 		firstName: 'Adam',
-	// 		lastName: 'Nowak',
-	// 		role: Role.admin,
-	// 	};
-	// 	const newUser2: User = {
-	// 		id: 2,
-	// 		firstName: 'Damian',
-	// 		lastName: 'Nowak',
-	// 		role: Role.devops,
-	// 	};
-	// 	const newUser3: User = {
-	// 		id: 3,
-	// 		firstName: 'Filp',
-	// 		lastName: 'Nowak',
-	// 		role: Role.developer,
-	// 	};
-	// 	UserService.addUser(newUser);
-	// 	UserService.addUser(newUser2);
-	// 	UserService.addUser(newUser3);
-	// }
+	if (UserService.getAllUsers().length <= 0) {
+		const newUser: User = {
+			id: 1,
+			login: 'admin',
+			password: 'admin',
+			firstName: 'Adam',
+			lastName: 'Nowak',
+			role: Role.admin,
+		};
+		const newUser2: User = {
+			id: 2,
+			login: 'devops',
+			password: 'devops',
+			firstName: 'Damian',
+			lastName: 'Nowak',
+			role: Role.devops,
+		};
+		const newUser3: User = {
+			id: 3,
+			login: 'developer',
+			password: 'developer',
+			firstName: 'Filp',
+			lastName: 'Nowak',
+			role: Role.developer,
+		};
+		UserService.addUser(newUser);
+		UserService.addUser(newUser2);
+		UserService.addUser(newUser3);
+	}
 	// if (TaskService.getAllTasks().length <= 0) {
 	// 	const newTask: Task = {
 	// 		id: 1,
@@ -61,6 +67,7 @@ function App() {
 	// 	TaskService.addTask(newTask2);
 	// 	TaskService.addTask(newTask3);
 	//}
+
 	return (
 		<Routes>
 			<Route path='/' element={<ProjectPage />} />
@@ -68,8 +75,8 @@ function App() {
 				<Route path='' element={<StoryPage />} />
 				<Route path='story/:storyId' element={<TaskPage />} />
 			</Route>
-			<Route path='/login' element={<LoginRegisterPage/>}/>
-			<Route path='/register' element={<RegisterPage/>}/>
+			<Route path='/login' element={<LoginRegisterPage />} />
+			<Route path='/register' element={<RegisterPage />} />
 			<Route path='*' element={<div>404 Not Found</div>}></Route>
 		</Routes>
 	);
