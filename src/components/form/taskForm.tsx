@@ -63,11 +63,8 @@ export default function TaskForm({
         <div className="bg-white rounded mx-auto ">
           <div className="flex justify-center mx-auto items-center text-xl ">
             <p className="ml-auto">{task ? "Edit task" : "Add new task"}</p>
-            <button
-              onClick={handleCloseCreateMenu}
-              className="ml-auto text-white text-xl font-bold bg-gradient-to-r from-rose-500 to-red-500 p-4"
-            >
-              X
+            <button onClick={handleCloseCreateMenu} className="rounded ml-auto">
+            <img src="/icons/closeIcon.svg" alt="Close" className="w-9" />
             </button>
           </div>
           <form onSubmit={handleCreateTask}>
@@ -81,9 +78,11 @@ export default function TaskForm({
                 placeholder="Description"
               />
               <div>
-                <label className="" htmlFor="priority">Priority:</label>
+                <label className="" htmlFor="priority">
+                  Priority:
+                </label>
                 <select
-				className="my-1 shadow bg-white border rounded-lg w-full py-2 px-3 mr-4 "
+                  className="my-1 shadow bg-white border rounded-lg w-full py-2 px-3 mr-4 "
                   id="priority"
                   value={formData.priority}
                   onChange={handlePriorityChange}
@@ -98,7 +97,7 @@ export default function TaskForm({
 
               <button
                 type="submit"
-                className="mt-2 bg-gradient-to-r from-cyan-400 to-blue-600 text-white font-bold py-2 px-4 rounded "
+                className="mt-2 w-full bg-gradient-to-r from-cyan-400 to-blue-600 text-white font-bold py-2 px-4 rounded "
               >
                 {task ? "Save" : "Add"}
               </button>

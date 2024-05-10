@@ -37,16 +37,17 @@ export default function ProjectForm({
 	return (
 		<div className='background-form w-screen h-screen fixed top-0 left-0'>
 			<div className=' flex h-screen w-11/12 items-center mx-auto '>
-				<div className='bg-white rounded mx-auto '>
+				<div className='bg-white dark:bg-gray-500 dark:text-black rounded mx-auto '>
 					<div className='flex justify-center mx-auto items-center text-xl py-2 px-3'>
-						<p className='ml-auto'>
+						<p className='ml-auto '>
 							{project ? 'Edit project' : 'Add new project'}
 						</p>
 						<button
 							onClick={handleCloseCreateMenu}
-							className='rounded ml-auto bg-gray-100 p-3'
+							className='rounded ml-auto '
 						>
-							X
+							 <img src="./icons/closeIcon.svg" alt="Close"
+					className="w-9" />
 						</button>
 					</div>
 					<form onSubmit={handleCreateProject}>
@@ -69,7 +70,7 @@ export default function ProjectForm({
 							/>
 							<button
 								type='submit'
-								className='my-1 ml-auto flex-no-shrink shadow bg-white py-2 px-4 border-2 rounded text-teal  '
+								className='w-full my-1 ml-auto flex-no-shrink  bg-gradient-to-r from-cyan-400 to-blue-600 py-2 px-4 text-white font-bold rounded  '
 							>
 								{project ? 'Save' : 'Add'}
 							</button>

@@ -37,15 +37,20 @@ export default function SetUserTaskForm({ setUser, handleCloseMenu }: Props) {
             <p className="mx-auto my-auto  text-xl">Set user to task</p>
             <button
               onClick={handleCloseMenu}
-              className="text-white text-xl font-bold bg-gradient-to-r from-rose-500 to-red-500 p-4"
+              className=""
             >
-              X
+              <img src="/icons/closeIcon.svg" alt="Close" className="w-9" />
             </button>
           </div>
           <form onSubmit={handleSetUser}>
             <div className="p-5">
               <label htmlFor="userId">Users:</label>
-              <select id="userId" className="my-1 shadow bg-white border rounded-lg w-full py-2 px-3 mr-4 " value={userId} onChange={handleUserChange}>
+              <select
+                id="userId"
+                className="my-1 shadow bg-white border rounded-lg w-full py-2 px-3 mr-4 "
+                value={userId}
+                onChange={handleUserChange}
+              >
                 <option key={"-1"} value={"-1"}>
                   ---
                 </option>
@@ -57,7 +62,7 @@ export default function SetUserTaskForm({ setUser, handleCloseMenu }: Props) {
               </select>
               <button
                 type="submit"
-                className="mt-2 bg-gradient-to-r from-cyan-400 to-blue-600 text-white font-bold py-2 px-4 rounded  "
+                className="mt-2 w-full bg-gradient-to-r from-cyan-400 to-blue-600 text-white font-bold py-2 px-4 rounded  "
               >
                 Save
               </button>

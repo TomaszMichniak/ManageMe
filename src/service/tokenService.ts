@@ -26,4 +26,8 @@ export class TokenService {
 	static getRefreshToken(): any {
 		return apiRefreshToken.getAll().shift();
 	}
+	static removeAllTokens(){
+		apiRefreshToken.clear()
+		apiToken.clear()
+	}
 }

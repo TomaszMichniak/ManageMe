@@ -1,20 +1,22 @@
-//import { useState } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
 import { TokenService } from '../service/tokenService';
 import { UserService } from '../service/userService';
 import { FormEvent } from 'react';
-import { jwtDecode } from 'jwt-decode';
 import { useState } from 'react';
 export default function Login() {
 	const [login, setLogin] = useState<string>('');
+	const navigate = useNavigate();
+	const location = useLocation();
 	const [password, setPassword] = useState<string>('');
+	const from = location.state?.from?.pathname || "/";
 	const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (login != '' && password != '') {
 			let token = await UserService.login(login, password);
 			TokenService.addToken(token?.data.token);
 			TokenService.addRefreshToken(token?.data.refreshToken);
-			console.log(TokenService.getToken());
 		}
+		navigate(from, { replace: true });
 	};
 	const handleVerify = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
