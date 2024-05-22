@@ -8,26 +8,31 @@ export default function Login() {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [password, setPassword] = useState<string>('');
-	const from = location.state?.from?.pathname || "/";
+	const [correctData, setCorrectData] = useState(false);
+	const from = location.state?.from?.pathname || '/';
 	const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (login != '' && password != '') {
 			let token = await UserService.login(login, password);
+			if (!token) {
+				setCorrectData(true);
+				return;
+			}
 			TokenService.addToken(token?.data.token);
 			TokenService.addRefreshToken(token?.data.refreshToken);
 		}
 		navigate(from, { replace: true });
-	};
-	const handleVerify = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		let token = await UserService.login('devops', 'devops');
-		TokenService.addToken(token?.data.token);
 	};
 
 	return (
 		<div className='flex justify-center items-center  mt-40'>
 			<div className='max-w-screen-sm mx-2 rounded-xl w-full px-2 py-5 bg-white text-center'>
 				<p className='text-3xl mb-5'>Sing In</p>
+				{correctData && (
+					<p className='text-red-500' id=''>
+						Incorrect data
+					</p>
+				)}
 				<form onSubmit={handleLogin} className='p-2'>
 					<input
 						type='text'

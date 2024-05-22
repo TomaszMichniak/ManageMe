@@ -30,8 +30,9 @@ export class UserService {
 		}
 		return await getToken(user.id);
 	}
-	static getUserName(id:number):string{
-		const user =this.getUserById(id)
-		return (`${user?.firstName} ${user?.lastName}`)
+
+	static getUserName(id: number): string {
+		const user = this.getUserById(id);
+		return `${user?.firstName} ${user?.lastName}`;
 	}
 }

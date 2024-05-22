@@ -3,7 +3,10 @@ import { User } from '../types/userType';
 import { FormEvent } from 'react';
 import { UserService } from '../service/userService';
 import { Role } from '../types/enums/roleEnum';
+import { useNavigate } from 'react-router-dom';
 export default function Register() {
+	const [correctData, setCorrectData] = useState(false);
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		login: '',
 		password: '',
@@ -17,7 +20,12 @@ export default function Register() {
 	};
 	const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (formData.login != '' && formData.password != '') {
+		if (
+			formData.login != '' &&
+			formData.password != '' &&
+			formData.lastName &&
+			formData.firstName
+		) {
 			let user: User = {
 				id: Math.floor(Date.now() / 100),
 				login: formData.login,
@@ -27,6 +35,9 @@ export default function Register() {
 				role: formData.role,
 			};
 			UserService.addUser(user);
+			navigate('/login');
+		} else {
+			setCorrectData(true);
 		}
 	};
 	const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -39,7 +50,12 @@ export default function Register() {
 		<div className='flex justify-center items-center  mt-40'>
 			<div className='max-w-screen-sm mx-2 rounded-xl w-full px-2 py-5 bg-white text-center'>
 				<p className='text-3xl mb-5'>Sing up</p>
-				<form onSubmit={handleRegister} className='p-2'>
+				{correctData && (
+					<p className='text-red-500' id=''>
+						Incorrect data
+					</p>
+				)}
+				<form onSubmit={handleRegister} className='p-2 text-left'>
 					<input
 						type='text'
 						name='login'
@@ -79,7 +95,13 @@ export default function Register() {
 						className='my-1 bg-gray-100 shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker'
 						placeholder='Confirm password'
 					/>
-					<select id='status' value={formData.role} onChange={handleRoleChange}>
+					<label className='ml-2'>Role:</label>
+					<select
+						className='my-1 shadow bg-white border rounded-lg w-full py-2 px-3 mr-4'
+						id='status'
+						value={formData.role}
+						onChange={handleRoleChange}
+					>
 						{Object.values(Role).map((role) => (
 							<option key={role} value={role}>
 								{role}

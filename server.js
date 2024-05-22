@@ -43,8 +43,10 @@ app.post('/refreshToken', function (req, res) {
 app.get('/protected/:id/:delay?', verifyToken, (req, res) => {
     const id = req.params.id;
     const delay = req.params.delay ? +req.params.delay : 1000;
+    const userId = req.user.userid;
+
     setTimeout(() => {
-        res.status(200).send(`{"message": "protected endpoint ${id}"}`);
+        res.status(200).send(`{"userId": "${userId}", "message": "protected endpoint ${id}"}`);
     }, delay);
 });
 app.listen(port, () => {
@@ -70,7 +72,7 @@ function verifyToken(req, res, next) {
             console.log(err);
             return res.status(401).send(err.message);
         }
-        req.user = user;
+        req.user = "ale";
         next();
     });
 }
