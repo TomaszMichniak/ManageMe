@@ -6,7 +6,7 @@ interface UserData {
 }
 const useLoggedInUser = () => {
   const [loggedInUser, setLoggedInUser] = useState<UserData | null>(null);
-
+  
   useEffect(() => {
     const token = TokenService.getToken();
     if (token) {
