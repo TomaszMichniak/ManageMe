@@ -7,6 +7,8 @@ import SetUserTaskForm from "./form/setUserTaskForm";
 import { TaskService } from "../service/taskService";
 import moment from "moment";
 import { Status } from "../types/enums/statusEnum";
+import { notificationService } from "../service/notificationService";
+import { Priority } from "../types/enums/priorityEnum";
 
 interface Props {
   task: Task;
@@ -36,16 +38,34 @@ export default function TaskDetails({ task, closeMenu, handleDelete }: Props) {
     task.userId = userId;
     task.startDate = moment().format("DD-MM-YYYY HH:mm");
     TaskService.setToDoing(task);
+    const notification = notificationService.createNotification(
+      "Task has user",
+      `Task with description: ${task.description} has new user!`,
+      Priority.high
+    );
+    notificationService.send(notification);
     setUserMode(false);
     closeMenu();
   };
   const handleSetToDone = (task: Task) => {
     task.endDate = moment().format("DD-MM-YYYY HH:mm");
+    const notification = notificationService.createNotification(
+      "Task done",
+      `Task with description: ${task.description} was done!`,
+      Priority.low
+    );
+    notificationService.send(notification);
     TaskService.setToDone(task);
     closeMenu();
   };
   const handleUpdate = async (updatedTask: Task) => {
     TaskService.updateTask(updatedTask);
+    const notification = notificationService.createNotification(
+      "Task edited",
+      `Task with description: ${updatedTask.description} was edited!`,
+      Priority.low
+    );
+    notificationService.send(notification);
     setEditingMode(false);
     closeMenu();
   };
@@ -55,10 +75,7 @@ export default function TaskDetails({ task, closeMenu, handleDelete }: Props) {
       <div className=" flex h-screen w-11/12 max-w-screen-md items-center mx-auto ">
         <div className="bg-white mx-auto rounded-xl w-full py-">
           <div className="text-right">
-            <button
-              onClick={closeMenu}
-              className=" rounded ml-auto"
-            >
+            <button onClick={closeMenu} className=" rounded ml-auto">
               <img src="/icons/closeIcon.svg" alt="Close" className="w-9" />
             </button>
           </div>
@@ -79,37 +96,37 @@ export default function TaskDetails({ task, closeMenu, handleDelete }: Props) {
             )}
             <div className="m-5">
               {task.status == Status.doing && (
-				  <button
+                <button
                   className="ml-1 mt-2 bg-gradient-to-r from-lime-400 to-green-600  text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleSetToDone(task)}
-				  >
+                >
                   Set done
                 </button>
               )}
               {task.status != Status.done && (
-				  <button
+                <button
                   className="ml-1 mt-2 bg-gradient-to-r from-cyan-400 to-blue-600 text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleSetUser()}
-				  >
+                >
                   Set user
                 </button>
               )}
-			  {task.status != Status.done && (
-				<button
-				  className="ml-1"
-				  onClick={() => setEditingMode(true)}
-				>
-				   <img src="/icons/editIcon.svg" alt="Edit"
-					className="w-7 md:w-9 inline" />
-				</button>
-			  )}
               {task.status != Status.done && (
-                <button
-                  className="ml-1"
-                  onClick={() => handleDelete(task.id)}
-                >
-                   <img src="/icons/binIcon.svg" alt="Delete"
-					className="w-7 md:w-9 inline "  />
+                <button className="ml-1" onClick={() => setEditingMode(true)}>
+                  <img
+                    src="/icons/editIcon.svg"
+                    alt="Edit"
+                    className="w-7 md:w-9 inline"
+                  />
+                </button>
+              )}
+              {task.status != Status.done && (
+                <button className="ml-1" onClick={() => handleDelete(task.id)}>
+                  <img
+                    src="/icons/binIcon.svg"
+                    alt="Delete"
+                    className="w-7 md:w-9 inline "
+                  />
                 </button>
               )}
             </div>

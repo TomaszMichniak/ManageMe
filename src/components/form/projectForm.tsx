@@ -28,7 +28,7 @@ export default function ProjectForm({
 		if (newProject.name == '' || newProject.description == '') return;
 		await handleCreate(newProject);
 	};
-
+	
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });

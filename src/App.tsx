@@ -8,6 +8,10 @@ import { User } from './types/userType';
 import { Role } from './types/enums/roleEnum';
 import LoginRegisterPage from './pages/loginPage';
 import RegisterPage from './pages/registerPage';
+import { notificationService } from './service/notificationService';
+import { NotificationType } from './types/notificationType';
+import moment from 'moment';
+import { Priority } from './types/enums/priorityEnum';
 function App() {
 	if (UserService.getAllUsers().length <= 0) {
 		const newUser: User = {
@@ -67,7 +71,6 @@ function App() {
 	// 	TaskService.addTask(newTask2);
 	// 	TaskService.addTask(newTask3);
 	//}
-
 	return (
 		<Routes>
 			<Route path='/' element={<ProjectPage />} />
