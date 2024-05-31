@@ -21,14 +21,15 @@ export default function ProjectForm({
 	const handleCreateProject = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		let newProject: Project = {
-			id: project ? project.id : Math.floor(Date.now() / 100),
+			//id: project ? project.id : Math.floor(Date.now() / 100),
+			_id: project ? project._id : '',
 			name: formData.name,
 			description: formData.description,
 		};
 		if (newProject.name == '' || newProject.description == '') return;
 		await handleCreate(newProject);
 	};
-	
+
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
@@ -46,8 +47,7 @@ export default function ProjectForm({
 							onClick={handleCloseCreateMenu}
 							className='rounded ml-auto '
 						>
-							 <img src="./icons/closeIcon.svg" alt="Close"
-					className="w-9" />
+							<img src='./icons/closeIcon.svg' alt='Close' className='w-9' />
 						</button>
 					</div>
 					<form onSubmit={handleCreateProject}>
