@@ -5,7 +5,6 @@ import { Status } from '../types/enums/statusEnum';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useLoggedInUser from '../hooks/useLoggedInUser';
 import { notificationService } from '../service/notificationService';
 import { Priority } from '../types/enums/priorityEnum';
 import { getProjectById } from '../requests/projectRequest';
@@ -17,8 +16,8 @@ import {
 	updateStory,
 } from '../requests/storyRequest';
 import { Project } from '../types/projectType';
+import { UserService } from '../service/userService';
 export default function StoryList() {
-	const user = useLoggedInUser();
 	let { projectId } = useParams<{ projectId: string }>();
 	if (projectId === undefined) {
 		throw new Error('undefined Parms');
@@ -29,6 +28,7 @@ export default function StoryList() {
 	const [stories, setStories] = useState<Story[] | null>(null);
 	const [editingStory, setEditingStory] = useState<Story | null>(null);
 	const [project, setProject] = useState<Project | null>(null);
+	const user = UserService.getUser();
 	useEffect(() => {
 		(async () => {
 			const data = await getProjectById(projectId);
@@ -164,7 +164,7 @@ export default function StoryList() {
 					handleCloseCreateMenu={() => setCreateMode(false)}
 					handleCreate={handleCreateNewStory}
 					projectId={projectId}
-					userId={user?.userid}
+					userId={user._id}
 				/>
 			)}
 			{editingStory && (
@@ -173,7 +173,7 @@ export default function StoryList() {
 					handleCloseCreateMenu={() => setEditingStory(null)}
 					handleCreate={handleEditProject}
 					projectId={projectId}
-					userId={user?.userid}
+					userId={user._id}
 				/>
 			)}
 		</div>
