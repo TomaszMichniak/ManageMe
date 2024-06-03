@@ -23,3 +23,5 @@ export const updateUserById = (id: string, values: Record<string, any>) =>
 	UserModel.findByIdAndUpdate(id, values);
 export const isUserExist = (login: string, password: string) =>
 	UserModel.findOne({ login: login, password: password });
+export const findUserByRefreshToken = (refreshToken: string) =>
+	UserModel.findOne({ refreshToken: refreshToken });

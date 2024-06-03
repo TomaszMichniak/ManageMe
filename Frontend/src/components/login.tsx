@@ -27,7 +27,7 @@ export default function Login() {
 			if (!user) return;
 			UserService.addUser(user);
 			TokenService.addToken(token?.data.token);
-			TokenService.addRefreshToken(token?.data.refreshToken);
+			TokenService.addRefreshToken(token?.data.refresh);
 		}
 		navigate(from, { replace: true });
 	};

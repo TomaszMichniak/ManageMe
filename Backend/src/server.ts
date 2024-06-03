@@ -22,6 +22,7 @@ import {
 	getAllUsers,
 	getUser,
 	login,
+	refreshYourToken,
 	register,
 } from './controllers/userController';
 import {
@@ -113,33 +114,9 @@ app.put('/tasks/:id', async (req, res) => {
 	return updateTask(req, res);
 });
 
-// app.post('/token', function (req, res) {
-// 	const expTime = req.body.exp || 60;
-// 	const userid = req.body.user;
-// 	const token = generateToken(+expTime, userid);
-// 	refreshToken = generateToken(60 * 60, userid);
-// 	res.status(200).send({ token, refreshToken });
-// });
-// app.post('/refreshToken', function (req, res) {
-// 	const refreshTokenFromPost = req.body.refreshToken;
-// 	if (refreshToken !== refreshTokenFromPost) {
-// 		res.status(400).send('Bad refresh token!');
-// 	}
-// 	const expTime = req.headers.exp || 60;
-// 	const userid = req.body.user;
-// 	const token = generateToken(+expTime, userid);
-// 	refreshToken = generateToken(60 * 60, userid);
-// 	setTimeout(() => {
-// 		res.status(200).send({ token, refreshToken });
-// 	}, 3000);
-// });
-// app.get('/protected/:id/:delay?', verifyToken, (req, res) => {
-// 	const id = req.params.id;
-// 	const delay = req.params.delay ? +req.params.delay : 1000;
-// 	setTimeout(() => {
-// 		res.status(200).send(`{"message": "protected endpoint ${id}"}`);
-// 	}, delay);
-// });
+app.post('/refreshToken', function (req, res) {
+	return refreshYourToken(req, res);
+});
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);
 });

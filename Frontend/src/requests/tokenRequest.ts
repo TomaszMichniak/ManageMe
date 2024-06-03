@@ -9,8 +9,9 @@ export async function verifyToken(token: string) {
 		},
 	});
 }
-export async function refreshToken(refreshToken: string) {
+export async function refreshToken(refreshToken: string, userId: string) {
 	return await axios.post('http://localhost:3001/refreshToken', {
 		refreshToken,
+		userId,
 	});
 }

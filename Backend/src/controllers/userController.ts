@@ -10,7 +10,7 @@ import {
 	isUserExist,
 } from '../database/users';
 const tokenSecret = 'sekretny_klucz';
-
+let refresh: string;
 export const register = async (req: express.Request, res: express.Response) => {
 	try {
 		const { login, password, role, firstName, lastName } = req.body.user;
@@ -37,12 +37,29 @@ export const login = async (req: express.Request, res: express.Response) => {
 		if (!login || !password) return res.sendStatus(400);
 		const user = await isUserExist(login, password);
 		if (!user) return res.sendStatus(401);
-		const token = generateToken(60, user);
-		return res.status(200).send({ token });
+		const token = generateToken(30, user);
+		refresh = generateToken(60 * 60, user);
+		return res.status(200).send({ token, refresh });
 	} catch (error) {
 		console.log(error);
 		return res.sendStatus(400);
 	}
+};
+export const refreshYourToken = async (
+	req: express.Request,
+	res: express.Response
+) => {
+	const refreshTokenFromPost = req.body.refreshToken;
+	if (refresh != refreshTokenFromPost) {
+		return res.status(401).send('Bad refresh token!');
+	}
+	const user = await getUserById(req.body.userId);
+	const token = generateToken(30, user);
+	const newRefreshToken = generateToken(60 * 60, user);
+	refresh = newRefreshToken;
+	setTimeout(() => {
+		res.status(200).send({ token, newRefreshToken });
+	}, 3000);
 };
 function generateToken(expirationInSeconds: number, user: any) {
 	const exp = Math.floor(Date.now() / 1000) + expirationInSeconds;
