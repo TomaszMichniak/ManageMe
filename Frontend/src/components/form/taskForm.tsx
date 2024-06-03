@@ -7,7 +7,7 @@ interface Props {
 	handleCloseCreateMenu: () => void;
 	handleCreate: (newTask: Task) => void;
 	task?: Task;
-	storyId: number;
+	storyId: string;
 }
 export default function TaskForm({
 	handleCreate,
@@ -32,7 +32,7 @@ export default function TaskForm({
 	const handleCreateTask = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		let newProject: Task = {
-			id: task ? task.id : Math.floor(Date.now() / 100),
+			_id: task ? task._id : '',
 			priority: formData.priority,
 			storyId: task ? task.storyId : storyId,
 			status: task ? task.status : Status.todo,

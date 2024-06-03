@@ -1,10 +1,11 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TokenService } from '../service/tokenService';
-import { UserService } from '../service/userService';
 import { FormEvent } from 'react';
 import { useState } from 'react';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+import { loginUser } from '../requests/userRequset';
+import { UserService } from '../service/userService';
 
 export default function Login() {
 	const [login, setLogin] = useState<string>('');
@@ -16,11 +17,15 @@ export default function Login() {
 	const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (login != '' && password != '') {
-			let token = await UserService.login(login, password);
+			let token = await loginUser(login, password);
 			if (!token) {
 				setCorrectData(true);
 				return;
 			}
+			const decodatedToken = jwtDecode(token.data.token);
+			const user = decodatedToken.user;
+			if (!user) return;
+			UserService.addUser(user);
 			TokenService.addToken(token?.data.token);
 			TokenService.addRefreshToken(token?.data.refreshToken);
 		}

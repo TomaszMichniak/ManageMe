@@ -1,5 +1,4 @@
 import express from 'express';
-import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -11,11 +10,32 @@ import {
 	getProject,
 	updateProject,
 } from './controllers/projectController';
+import {
+	addStory,
+	deleteStory,
+	getAllStories,
+	getStoriesByProject,
+	getStory,
+	updateStory,
+} from './controllers/storyController';
+import {
+	getAllUsers,
+	getUser,
+	login,
+	register,
+} from './controllers/userController';
+import {
+	addTask,
+	deleteTask,
+	getAllTasksByStoryId,
+	getTask,
+	updateTask,
+} from './controllers/taskController';
+import { getAllStoryTasks } from 'database/task';
 
 dotenv.config();
 const app = express();
 const port = 3001;
-const tokenSecret = 'sekretny_klucz';
 let refreshToken: string;
 
 app.use(
@@ -24,7 +44,6 @@ app.use(
 	})
 );
 app.use(express.json());
-
 app.get('/', (req, res) => {
 	res.send('Hello World - simple api with JWT!');
 });
@@ -44,60 +63,87 @@ app.delete('/projects/:id', async (req, res) => {
 app.put('/projects/:id', async (req, res) => {
 	return updateProject(req, res);
 });
+//Stories
+app.get('/stories', async (req, res) => {
+	return getAllStories(req, res);
+});
+app.get('/story/:id', async (req, res) => {
+	return getStory(req, res);
+});
+app.post('/stories', async (req, res) => {
+	return addStory(req, res);
+});
+app.delete('/stories/:id', async (req, res) => {
+	return deleteStory(req, res);
+});
+app.put('/stories/:id', async (req, res) => {
+	return updateStory(req, res);
+});
+app.get('/stories/:id', async (req, res) => {
+	return getStoriesByProject(req, res);
+});
+//User
+app.post('/register', async (req, res) => {
+	return register(req, res);
+});
+app.get('/login/:login/:password', async (req, res) => {
+	return login(req, res);
+});
+app.get('/user/:userId', async (req, res) => {
+	return getUser(req, res);
+});
+app.get('/users', async (req, res) => {
+	return getAllUsers(req, res);
+});
+//Task
+//
+app.get('/tasks/:storyId', async (req, res) => {
+	return getAllTasksByStoryId(req, res);
+});
+app.get('/tasks/:id', async (req, res) => {
+	return getTask(req, res);
+});
+app.post('/tasks', async (req, res) => {
+	return addTask(req, res);
+});
+app.delete('/tasks/:id', async (req, res) => {
+	return deleteTask(req, res);
+});
+app.put('/tasks/:id', async (req, res) => {
+	return updateTask(req, res);
+});
 
-app.post('/token', function (req, res) {
-	const expTime = req.body.exp || 60;
-	const userid = req.body.user;
-	const token = generateToken(+expTime, userid);
-	refreshToken = generateToken(60 * 60, userid);
-	res.status(200).send({ token, refreshToken });
-});
-app.post('/refreshToken', function (req, res) {
-	const refreshTokenFromPost = req.body.refreshToken;
-	if (refreshToken !== refreshTokenFromPost) {
-		res.status(400).send('Bad refresh token!');
-	}
-	const expTime = req.headers.exp || 60;
-	const userid = req.body.user;
-	const token = generateToken(+expTime, userid);
-	refreshToken = generateToken(60 * 60, userid);
-	setTimeout(() => {
-		res.status(200).send({ token, refreshToken });
-	}, 3000);
-});
-app.get('/protected/:id/:delay?', verifyToken, (req, res) => {
-	const id = req.params.id;
-	const delay = req.params.delay ? +req.params.delay : 1000;
-	setTimeout(() => {
-		res.status(200).send(`{"message": "protected endpoint ${id}"}`);
-	}, delay);
-});
+// app.post('/token', function (req, res) {
+// 	const expTime = req.body.exp || 60;
+// 	const userid = req.body.user;
+// 	const token = generateToken(+expTime, userid);
+// 	refreshToken = generateToken(60 * 60, userid);
+// 	res.status(200).send({ token, refreshToken });
+// });
+// app.post('/refreshToken', function (req, res) {
+// 	const refreshTokenFromPost = req.body.refreshToken;
+// 	if (refreshToken !== refreshTokenFromPost) {
+// 		res.status(400).send('Bad refresh token!');
+// 	}
+// 	const expTime = req.headers.exp || 60;
+// 	const userid = req.body.user;
+// 	const token = generateToken(+expTime, userid);
+// 	refreshToken = generateToken(60 * 60, userid);
+// 	setTimeout(() => {
+// 		res.status(200).send({ token, refreshToken });
+// 	}, 3000);
+// });
+// app.get('/protected/:id/:delay?', verifyToken, (req, res) => {
+// 	const id = req.params.id;
+// 	const delay = req.params.delay ? +req.params.delay : 1000;
+// 	setTimeout(() => {
+// 		res.status(200).send(`{"message": "protected endpoint ${id}"}`);
+// 	}, delay);
+// });
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);
 });
 
-function generateToken(expirationInSeconds: number, userid: number) {
-	const exp = Math.floor(Date.now() / 1000) + expirationInSeconds;
-	const token = jwt.sign({ exp, userid }, tokenSecret, {
-		algorithm: 'HS256',
-	});
-	return token;
-}
-
-function verifyToken(req: any, res: any, next: any) {
-	const authHeader = req.headers['authorization'];
-	const token = authHeader?.split(' ')[1];
-
-	if (!token) return res.sendStatus(403);
-
-	jwt.verify(token, tokenSecret, (err: any) => {
-		if (err) {
-			console.log(err);
-			return res.status(401).send(err.message);
-		}
-		next();
-	});
-}
 mongoose.Promise = Promise;
 mongoose
 	.connect(

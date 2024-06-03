@@ -1,33 +1,32 @@
 import { User } from '../../types/userType';
-import { UserService } from '../../service/userService';
 import { useState, useEffect } from 'react';
 import { FormEvent } from 'react';
 import { Role } from '../../types/enums/roleEnum';
+import { getAllUsers } from '../../requests/userRequset';
 interface Props {
-	setUser: (userId: number) => void;
+	setUser: (userId: string) => void;
 	handleCloseMenu: () => void;
 }
 export default function SetUserTaskForm({ setUser, handleCloseMenu }: Props) {
 	const [users, setUsers] = useState<User[] | null>(null);
-	const [userId, setUserId] = useState<number>(-1);
+	const [userId, setUserId] = useState<string>();
 	useEffect(() => {
 		(async () => {
-			let data = UserService.getAllUsers();
+			let data = await getAllUsers();
 			data = data.filter(
-				(item) => item.role == Role.developer || item.role == Role.devops
+				(item: User) => item.role == Role.developer || item.role == Role.devops
 			);
 			setUsers(data);
 		})();
 	}, []);
 	const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		if (!(e.target.value == '-1')) {
-			setUserId(parseInt(e.target.value));
+		if (!(e.target.value == '')) {
+			setUserId(e.target.value);
 		}
 	};
 	const handleSetUser = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (userId == -1) return;
-		setUser(userId);
+		if (userId != '' && userId != undefined) setUser(userId);
 	};
 	return (
 		<div className='background-form w-screen h-full fixed top-0 left-0'>
@@ -52,7 +51,7 @@ export default function SetUserTaskForm({ setUser, handleCloseMenu }: Props) {
 									---
 								</option>
 								{users?.map((user) => (
-									<option key={user.id} value={user.id}>
+									<option key={user._id} value={user._id}>
 										{user.firstName} {user.lastName}
 									</option>
 								))}

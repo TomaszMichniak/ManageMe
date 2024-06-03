@@ -21,7 +21,6 @@ export default function ProjectForm({
 	const handleCreateProject = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		let newProject: Project = {
-			//id: project ? project.id : Math.floor(Date.now() / 100),
 			_id: project ? project._id : '',
 			name: formData.name,
 			description: formData.description,

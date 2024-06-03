@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { User } from '../types/userType';
 import { FormEvent } from 'react';
-import { UserService } from '../service/userService';
 import { Role } from '../types/enums/roleEnum';
 import { useNavigate } from 'react-router-dom';
+import { register } from '../requests/userRequset';
 export default function Register() {
 	const [correctData, setCorrectData] = useState(false);
 	const navigate = useNavigate();
@@ -27,14 +27,14 @@ export default function Register() {
 			formData.firstName
 		) {
 			let user: User = {
-				id: Math.floor(Date.now() / 100),
+				_id: '',
 				login: formData.login,
 				password: formData.password,
 				firstName: formData.firstName,
 				lastName: formData.lastName,
 				role: formData.role,
 			};
-			UserService.addUser(user);
+			register(user);
 			navigate('/login');
 		} else {
 			setCorrectData(true);

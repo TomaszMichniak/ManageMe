@@ -4,14 +4,13 @@ import { FormEvent } from 'react';
 import moment from 'moment';
 import { Status } from '../../types/enums/statusEnum';
 import { Priority } from '../../types/enums/priorityEnum';
-import { ProjectService } from '../../service/projectService';
 import { useNavigate, useLocation } from 'react-router-dom';
 interface Props {
 	handleCloseCreateMenu: () => void;
 	handleCreate: (newStory: Story) => void;
 	story?: Story;
-	userId?: number;
-	projectId: number;
+	userId?: string;
+	projectId: string;
 }
 export default function StoryForm({
 	handleCloseCreateMenu,
@@ -44,19 +43,19 @@ export default function StoryForm({
 			});
 		}
 	}, [story]);
-	const project = ProjectService.getProjectById(projectId);
+
 	const handleCreateStory = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (userId != null && userId != undefined) {
 			let newStory: Story = {
-				id: story ? story.id : Math.floor(Date.now() / 100),
+				_id: story ? story._id : '',
 				name: formData.name,
 				description: formData.description,
 				status: formData.status,
 				priority: formData.priority,
 				createDate: story ? story.createDate : moment().format('DD-MM-YYYY'),
-				userId: userId,
-				project: project!,
+				userId: story ? story.userId : userId,
+				project: projectId,
 			};
 			if (newStory.name == '' || newStory.description == '') return;
 			await handleCreate(newStory);

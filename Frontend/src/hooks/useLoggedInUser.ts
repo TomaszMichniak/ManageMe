@@ -1,22 +1,22 @@
-import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
-import { TokenService } from "../service/tokenService";
+import { useState, useEffect } from 'react';
+import { TokenService } from '../service/tokenService';
+import { UserService } from '../service/userService';
 interface UserData {
-  userid?: number;
+	userid?: string;
 }
 const useLoggedInUser = () => {
-  const [loggedInUser, setLoggedInUser] = useState<UserData | null>(null);
-  
-  useEffect(() => {
-    const token = TokenService.getToken();
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      if (decodedToken && decodedToken.userid) {
-        setLoggedInUser({ userid: decodedToken.userid });
-      }
-    }
-  }, []);
-  return loggedInUser;
+	const [loggedInUser, setLoggedInUser] = useState<UserData | null>(null);
+
+	useEffect(() => {
+		const token = TokenService.getToken();
+		if (token) {
+			const user = UserService.getUser();
+			if (user && user._id) {
+				setLoggedInUser({ userid: user._id });
+			}
+		}
+	}, []);
+	return loggedInUser;
 };
 
 export default useLoggedInUser;
