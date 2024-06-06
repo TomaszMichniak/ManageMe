@@ -1,50 +1,54 @@
-import { useState, useEffect } from 'react';
-import { TokenService } from '../service/tokenService';
-import { UserService } from '../service/userService';
-import { jwtDecode } from 'jwt-decode';
-import { refreshToken } from '../requests/tokenRequest';
-interface UserData {
-	userid?: string;
-}
+import {  useEffect } from "react";
+import { TokenService } from "../service/tokenService";
+import { UserService } from "../service/userService";
+import { jwtDecode } from "jwt-decode";
+import { refreshToken } from "../requests/tokenRequest";
+
 const useLoggedInUser = () => {
-	const [loggedInUser, setLoggedInUser] = useState<UserData | null>(null);
-
+	console.log("start")
 	useEffect(() => {
-		(async () => {
-			const token = TokenService.getToken();
-			if (token) {
-				const currentTime = Math.floor(Date.now() / 1000);
-				const decodatedToken = jwtDecode(token);
-				if (decodatedToken.exp && decodatedToken.exp > currentTime) {
-					const user = UserService.getUser();
-					if (user) {
-						setLoggedInUser({ userid: user._id });
-					}
-				} else {
-					const rToken = await TokenService.getRefreshToken();
-					if (!rToken) {
-						TokenService.removeAllTokens();
-					}
-					const user = await UserService.getUser();
-					if (!user) return;
-					const newToken = await refreshToken(rToken, user._id);
-					if (newToken) {
-						console.log('Refresh Token');
-						const decodatedToken = jwtDecode(newToken.data.token);
-						const user = decodatedToken.user;
-						if (!user) return;
-						UserService.addUser(user);
-						setLoggedInUser({ userid: user._id });
-						TokenService.addToken(newToken?.data.token);
-						TokenService.addRefreshToken(newToken?.data.newRefreshToken);
-					} else {
-						TokenService.removeAllTokens();
-					}
-				}
+	  const checkAndRefreshToken = async () => {
+		const token = TokenService.getToken();
+		if (token) {
+		  const currentTime = Math.floor(Date.now() / 1000);
+		  const decodedToken = jwtDecode(token);
+  
+		  if (decodedToken.exp && decodedToken.exp > currentTime) {
+			const user = decodedToken.user;
+			if (user) {
+			  UserService.addUser(user);
 			}
-		})();
+		  } else {
+			const rToken = TokenService.getRefreshToken();
+			if (rToken) {
+			  const user = await UserService.getUser();
+			  if (user) {
+				const newTokenResponse = await refreshToken(rToken, user._id);
+				if (newTokenResponse) {
+				  const newToken = newTokenResponse.data.token;
+				  const newRefreshToken = newTokenResponse.data.newRefreshToken;
+				  const decodedNewToken = jwtDecode(newToken);
+				  const newUser = decodedNewToken.user;
+				  if (newUser) {
+					UserService.addUser(newUser);
+					TokenService.addToken(newToken);
+					TokenService.addRefreshToken(newRefreshToken);
+				  }
+				} else {
+				  TokenService.removeAllTokens();
+				  UserService.removeUser();
+				}
+			  }
+			} else {
+			  TokenService.removeAllTokens();
+			  UserService.removeUser();
+			}
+		  }
+		}
+	  };
+  
+	  checkAndRefreshToken();
 	}, []);
-	return loggedInUser;
-};
-
-export default useLoggedInUser;
+  };
+  
+  export default useLoggedInUser;

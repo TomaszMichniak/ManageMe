@@ -23,13 +23,13 @@ export default function NotificationList() {
     <div className="mx-auto max-w-screen-xl w-full">
       {notifications.length != 0 && (
         <div className="relative  justify-end flex mr-5  ">
-          <div className="fixed max-h-80 overflow-auto border-t-4 border-sky-400 bg-sky-200 rounded-b-xl text-teal-900 px-7  shadow-md">
+          <div className="fixed max-h-80 overflow-auto border-t-4  border-sky-400 bg-blue-100 rounded-b-xl text-teal-900 px-7  shadow-md">
             <div>
               {notifications.map((notification, index) => (
                 <button
                   onClick={() => handleRead(notification)}
-                  key={index}
-                  className="relative w-full py-2 block border-b-2 border-sky-400 text-left"
+                  key={index} 
+                  className="relative w-full opacity-70 hover:opacity-100 py-2 block border-b-2 border-sky-400 text-left"
                 >
                   {!notification.read && (
                     <p className="absolute top-1 text-red-600 text-sm font-bold">NEW</p>

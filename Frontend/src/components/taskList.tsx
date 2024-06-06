@@ -81,7 +81,7 @@ export default function TaskList() {
 		await addTask(newTask);
 		const notification = notificationService.createNotification(
 			'Task created',
-			`Task with description: ${newTask.description} was created.`,
+			`Task with description: ${newTask.description} has been created.`,
 			Priority.low
 		);
 		notificationService.send(notification);
@@ -98,7 +98,7 @@ export default function TaskList() {
 		await deleteTask(taskId);
 		const notification = notificationService.createNotification(
 			'Task removed',
-			`Task with description: ${task?.description} was removed!`,
+			`Task with description: ${task?.description} has been removed!`,
 			Priority.high
 		);
 		notificationService.send(notification);

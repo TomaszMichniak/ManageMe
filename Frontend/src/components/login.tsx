@@ -36,9 +36,6 @@ export default function Login() {
 		console.log(token);
 	};
 
-	const onFailure = (res: any) => {
-		console.log('Login Failed:', res);
-	};
 	return (
 		<div className='flex justify-center items-center  mt-40'>
 			<div className='max-w-screen-sm mx-2 rounded-xl w-full px-2 py-5 bg-white text-center'>

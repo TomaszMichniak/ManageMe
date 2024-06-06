@@ -16,7 +16,8 @@ import {
 	updateStory,
 } from '../requests/storyRequest';
 import { Project } from '../types/projectType';
-import { UserService } from '../service/userService';
+import { getUserById } from '../requests/userRequset';
+import { User } from '../types/userType';
 export default function StoryList() {
 	let { projectId } = useParams<{ projectId: string }>();
 	if (projectId === undefined) {
@@ -28,7 +29,7 @@ export default function StoryList() {
 	const [stories, setStories] = useState<Story[] | null>(null);
 	const [editingStory, setEditingStory] = useState<Story | null>(null);
 	const [project, setProject] = useState<Project | null>(null);
-	const user = UserService.getUser();
+	const [owners, setOwners] = useState<{ [key: string]: User }>({});
 	useEffect(() => {
 		(async () => {
 			const data = await getProjectById(projectId);
@@ -37,14 +38,19 @@ export default function StoryList() {
 		})();
 	}, [selectedStatus]);
 	const getSetStory = async () => {
-		if (selectedStatus == null) {
-			const data = await getStoriesByProjectId(projectId);
-			await setStories(data);
-		} else {
-			let data = await getStoriesByProjectId(projectId);
-			data = data.filter((item: Story) => item.status == selectedStatus);
-			await setStories(data);
-		}
+		let data = await getStoriesByProjectId(projectId);
+        if (selectedStatus != null) {
+            data = data.filter((item: Story) => item.status == selectedStatus);
+        }
+        setStories(data);
+        const userIds = data.map((story: Story) => story.userId);
+        const userPromises = userIds.map((id:string) => getUserById(id));
+        const usersData = await Promise.all(userPromises);
+        const usersMap: { [key: string]: User } = {};
+        usersData.forEach(user => {
+            usersMap[user._id] = user;
+        });
+        setOwners(usersMap);
 	};
 	const handleEdit = async (storyId: string) => {
 		let project = await getStoryById(storyId);
@@ -54,7 +60,7 @@ export default function StoryList() {
 		await updateStory(editStory);
 		const notification = notificationService.createNotification(
 			'Story edited',
-			`Story with name: ${editStory.name} was edited!`,
+			`Story with name: ${editStory.name} has been edited!`,
 			Priority.low
 		);
 		notificationService.send(notification);
@@ -65,7 +71,7 @@ export default function StoryList() {
 		await addStory(newStory);
 		const notification = notificationService.createNotification(
 			'Story created',
-			`Story with name: ${newStory.name} was created!`,
+			`Story with name: ${newStory.name} has been created!`,
 			Priority.low
 		);
 		notificationService.send(notification);
@@ -76,7 +82,7 @@ export default function StoryList() {
 		await deleteStory(storyId);
 		const notification = notificationService.createNotification(
 			'Story removed',
-			`Story with id:${storyId} was removed!`,
+			`Your story has been removed!`,
 			Priority.high
 		);
 		notificationService.send(notification);
@@ -122,7 +128,7 @@ export default function StoryList() {
 				</button>
 				<p className='text-center text-xl text-white'>Stories:</p>
 			</div>
-			<div className='flex flex-wrap    justify-center items-center items-stretch '>
+			<div className='flex flex-wrap    justify-center items-stretch '>
 				{stories?.map((story) => (
 					<div
 						key={story._id}
@@ -134,7 +140,7 @@ export default function StoryList() {
 							<p className='py-1'>Priority: {story.priority}</p>
 							<p className='py-1'>Created: {story.createDate}</p>
 							<p className='py-1'>Status: {story.status}</p>
-							<p className='py-1'>Właściciel: {story.userId}</p>
+							<p className='py-1'>Owner: {owners[story.userId]&& `${owners[story.userId].firstName} ${owners[story.userId].lastName}` || story.userId}</p>
 						</div>
 						<div className='text-center '>
 							<Link
@@ -164,7 +170,6 @@ export default function StoryList() {
 					handleCloseCreateMenu={() => setCreateMode(false)}
 					handleCreate={handleCreateNewStory}
 					projectId={projectId}
-					userId={user._id}
 				/>
 			)}
 			{editingStory && (
@@ -173,7 +178,6 @@ export default function StoryList() {
 					handleCloseCreateMenu={() => setEditingStory(null)}
 					handleCreate={handleEditProject}
 					projectId={projectId}
-					userId={user._id}
 				/>
 			)}
 		</div>

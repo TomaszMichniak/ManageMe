@@ -5,6 +5,8 @@ import moment from 'moment';
 import { Status } from '../../types/enums/statusEnum';
 import { Priority } from '../../types/enums/priorityEnum';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { User } from '../../types/userType';
+import { UserService } from '../../service/userService';
 interface Props {
 	handleCloseCreateMenu: () => void;
 	handleCreate: (newStory: Story) => void;
@@ -17,23 +19,23 @@ export default function StoryForm({
 	handleCreate,
 	projectId,
 	story,
-	userId,
 }: Props) {
 	const navigate = useNavigate();
 	const location = useLocation();
-	useEffect(() => {
-		if (!userId) {
-			navigate('/login', { state: { from: location } });
-		}
-	});
+	const[user,setUser]=useState<User|null>(null)
+
+	
 	const [formData, setFormData] = useState({
 		name: '',
 		description: '',
 		status: Status.todo,
 		priority: Priority.low,
 	});
-
 	useEffect(() => {
+		const data=UserService.getUser();
+		if(!data)
+			navigate('/login', { state: { from: location } });
+		setUser(data);
 		if (story) {
 			setFormData({
 				name: story.name,
@@ -46,7 +48,7 @@ export default function StoryForm({
 
 	const handleCreateStory = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (userId != null && userId != undefined) {
+		if (user?._id!=null) {
 			let newStory: Story = {
 				_id: story ? story._id : '',
 				name: formData.name,
@@ -54,7 +56,7 @@ export default function StoryForm({
 				status: formData.status,
 				priority: formData.priority,
 				createDate: story ? story.createDate : moment().format('DD-MM-YYYY'),
-				userId: story ? story.userId : userId,
+				userId: story ? story.userId : user._id,
 				project: projectId,
 			};
 			if (newStory.name == '' || newStory.description == '') return;

@@ -41,7 +41,7 @@ export default function TaskDetails({ task, closeMenu, handleDelete }: Props) {
 		await updateTask(task);
 		const notification = notificationService.createNotification(
 			'Task has user',
-			`Task with description: ${task.description} has new user!`,
+			`The task with description '${task.description}' has a new user!`,
 			Priority.high
 		);
 		notificationService.send(notification);
@@ -52,7 +52,7 @@ export default function TaskDetails({ task, closeMenu, handleDelete }: Props) {
 		task.endDate = moment().format('DD-MM-YYYY HH:mm');
 		const notification = notificationService.createNotification(
 			'Task done',
-			`Task with description: ${task.description} was done!`,
+			`${task.description} has been done!`,
 			Priority.low
 		);
 		notificationService.send(notification);
@@ -64,7 +64,7 @@ export default function TaskDetails({ task, closeMenu, handleDelete }: Props) {
 		await updateTask(updatedTask);
 		const notification = notificationService.createNotification(
 			'Task edited',
-			`Task with description: ${updatedTask.description} was edited!`,
+			`Task with description: ${updatedTask.description} has been edited!`,
 			Priority.low
 		);
 		notificationService.send(notification);

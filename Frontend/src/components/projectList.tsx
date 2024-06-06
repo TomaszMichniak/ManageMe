@@ -33,7 +33,7 @@ export default function ProjectList() {
 		await addProject(newProject);
 		const notification = notificationService.createNotification(
 			'New project',
-			`New project with name: ${newProject.name} was created`,
+			`New project with name: ${newProject.name} has been created!`,
 			Priority.low
 		);
 		notificationService.send(notification);
@@ -44,7 +44,7 @@ export default function ProjectList() {
 		await updateProject(editProject);
 		const notification = notificationService.createNotification(
 			'Edit project',
-			` ${editProject.name} was edited`,
+			` ${editProject.name} has been edited`,
 			Priority.low
 		);
 		notificationService.send(notification);
@@ -55,8 +55,8 @@ export default function ProjectList() {
 	const handleDelete = async (projectId: string) => {
 		await deleteProject(projectId);
 		const notification = notificationService.createNotification(
-			'Project',
-			`Project was removed!`,
+			'Project removed',
+			`Your project has been removed!`,
 			Priority.high
 		);
 		notificationService.send(notification);

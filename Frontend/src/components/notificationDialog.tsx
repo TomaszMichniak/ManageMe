@@ -32,7 +32,7 @@ export default function NotificationDialog() {
 
   return (
     <div className=" flex justify-end">
-      <div className="mx-1 text-right w-72 p-2 fixed top-1 z-20 border-2 rounded border-red-600 bg-red-400 ">
+      <div className="mx-1 hover:opacity-95  text-right w-72 p-2 fixed top-1 z-20 border-2 rounded-xl border-red-400 bg-red-300 ">
         <button
           onClick={() => handleCloseNotification()}
           className="w-full py-2 block  text-left"
